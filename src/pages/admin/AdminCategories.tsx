@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Upload, Link as LinkIcon } from 'lucide-react';
 import { categories as initialCats } from '@/data/products';
 
 const AdminCategories = () => {
@@ -7,35 +7,74 @@ const AdminCategories = () => {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const [name, setName] = useState('');
+  const [image, setImage] = useState('');
+  const [imageInput, setImageInput] = useState('');
+
+  const resetForm = () => { setName(''); setImage(''); setImageInput(''); setEditing(null); setShowForm(false); };
+
+  const handleEdit = (id: string) => {
+    const cat = items.find(c => c.id === id);
+    if (cat) { setEditing(id); setName(cat.name); setImage(cat.image); setShowForm(true); }
+  };
 
   const handleSave = () => {
     if (!name.trim()) return;
+    const finalImage = image || 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=400&fit=crop';
     if (editing) {
-      setItems(prev => prev.map(c => c.id === editing ? { ...c, name, slug: name.toLowerCase().replace(/\s+/g, '-') } : c));
+      setItems(prev => prev.map(c => c.id === editing ? { ...c, name, slug: name.toLowerCase().replace(/\s+/g, '-'), image: finalImage } : c));
     } else {
-      setItems(prev => [...prev, { id: Date.now().toString(), name, slug: name.toLowerCase().replace(/\s+/g, '-'), image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=400&fit=crop' }]);
+      setItems(prev => [...prev, { id: Date.now().toString(), name, slug: name.toLowerCase().replace(/\s+/g, '-'), image: finalImage }]);
     }
-    setName(''); setEditing(null); setShowForm(false);
+    resetForm();
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => { if (ev.target?.result) setImage(ev.target.result as string); };
+    reader.readAsDataURL(file);
   };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold text-foreground">Categories</h1>
-        <button onClick={() => { setName(''); setEditing(null); setShowForm(true); }} className="flex items-center gap-2 gradient-gold text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold shadow-gold">
+        <button onClick={() => { resetForm(); setShowForm(true); }} className="flex items-center gap-2 gradient-gold text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold shadow-gold">
           <Plus className="w-4 h-4" /> Add Category
         </button>
       </div>
+
       {showForm && (
-        <div className="bg-card rounded-xl p-6 shadow-warm flex items-end gap-3">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-foreground mb-1">Category Name</label>
-            <input value={name} onChange={e => setName(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+        <div className="bg-card rounded-xl p-6 shadow-warm space-y-4">
+          <h3 className="font-display font-semibold text-foreground">{editing ? 'Edit Category' : 'Add Category'}</h3>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1">Category Name *</label>
+            <input value={name} onChange={e => setName(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" placeholder="e.g. Bridal Collection" />
           </div>
-          <button onClick={handleSave} className="bg-primary text-primary-foreground px-4 py-2.5 rounded-lg text-sm font-semibold">Save</button>
-          <button onClick={() => setShowForm(false)} className="border border-input text-foreground px-4 py-2.5 rounded-lg text-sm">Cancel</button>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">Category Image</label>
+            {image && <img src={image} alt="" className="w-20 h-20 rounded-lg object-cover mb-2" />}
+            <div className="flex gap-2 flex-wrap">
+              <label className="flex items-center gap-2 px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm cursor-pointer hover:bg-muted transition-colors">
+                <Upload className="w-4 h-4" /> Upload
+                <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+              </label>
+              <div className="flex gap-1 flex-1 min-w-[200px]">
+                <input type="url" value={imageInput} onChange={e => setImageInput(e.target.value)} placeholder="Or paste image URL..." className="flex-1 px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
+                <button type="button" onClick={() => { if (imageInput.trim()) { setImage(imageInput.trim()); setImageInput(''); } }} className="px-3 py-2 rounded-lg border border-input text-foreground hover:bg-muted transition-colors">
+                  <LinkIcon className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={handleSave} className="bg-primary text-primary-foreground px-4 py-2.5 rounded-lg text-sm font-semibold">Save</button>
+            <button onClick={resetForm} className="border border-input text-foreground px-4 py-2.5 rounded-lg text-sm">Cancel</button>
+          </div>
         </div>
       )}
+
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map(cat => (
           <div key={cat.id} className="bg-card rounded-xl p-4 shadow-warm flex items-center gap-4">
@@ -45,7 +84,7 @@ const AdminCategories = () => {
               <p className="text-xs text-muted-foreground">/{cat.slug}</p>
             </div>
             <div className="flex gap-1">
-              <button onClick={() => { setEditing(cat.id); setName(cat.name); setShowForm(true); }} className="p-1.5 rounded hover:bg-muted text-foreground"><Pencil className="w-4 h-4" /></button>
+              <button onClick={() => handleEdit(cat.id)} className="p-1.5 rounded hover:bg-muted text-foreground"><Pencil className="w-4 h-4" /></button>
               <button onClick={() => setItems(prev => prev.filter(c => c.id !== cat.id))} className="p-1.5 rounded hover:bg-destructive/10 text-destructive"><Trash2 className="w-4 h-4" /></button>
             </div>
           </div>
