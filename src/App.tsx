@@ -33,38 +33,41 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <CartProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Customer Routes */}
-            <Route element={<CustomerLayout />}>
-              <Route path="/" element={<Index />} />
-              <Route path="/shop" element={<Shop />} />
-              <Route path="/product/:id" element={<ProductDetails />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/thank-you" element={<ThankYou />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-            </Route>
+      <AuthProvider>
+        <CartProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Customer Routes */}
+              <Route element={<CustomerLayout />}>
+                <Route path="/" element={<Index />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/thank-you" element={<ThankYou />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/auth" element={<Auth />} />
+              </Route>
 
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="products" element={<AdminProducts />} />
-              <Route path="categories" element={<AdminCategories />} />
-              <Route path="banners" element={<AdminBanners />} />
-              <Route path="coupons" element={<AdminCoupons />} />
-              <Route path="orders" element={<AdminOrders />} />
-              <Route path="users" element={<AdminUsers />} />
-            </Route>
+              {/* Admin Routes */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="categories" element={<AdminCategories />} />
+                <Route path="banners" element={<AdminBanners />} />
+                <Route path="coupons" element={<AdminCoupons />} />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="users" element={<AdminUsers />} />
+              </Route>
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </CartProvider>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </CartProvider>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
