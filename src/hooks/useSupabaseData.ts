@@ -63,10 +63,10 @@ function useSupabaseTable<T>(table: string) {
 
   const fetch = useCallback(async () => {
     setLoading(true);
-    const { data: rows, error } = await supabase
-      .from(table)
+    const { data: rows, error } = await (supabase
+      .from(table as any)
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }) as any);
     if (!error && rows) setData(rows as T[]);
     setLoading(false);
   }, [table]);
