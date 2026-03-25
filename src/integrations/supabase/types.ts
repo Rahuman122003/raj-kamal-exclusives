@@ -14,6 +14,186 @@ export type Database = {
   }
   public: {
     Tables: {
+      banners: {
+        Row: {
+          created_at: string
+          id: string
+          image: string
+          link: string
+          subtitle: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image?: string
+          link?: string
+          subtitle?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image?: string
+          link?: string
+          subtitle?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          image: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      coupons: {
+        Row: {
+          code: string
+          created_at: string
+          discount: number
+          expires_at: string
+          id: string
+          is_active: boolean
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          discount?: number
+          expires_at: string
+          id?: string
+          is_active?: boolean
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          discount?: number
+          expires_at?: string
+          id?: string
+          is_active?: boolean
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          address: string
+          created_at: string
+          customer_name: string
+          email: string
+          id: string
+          items: Json
+          order_id: string
+          payment_id: string | null
+          phone: string
+          status: string
+          total: number
+          user_id: string | null
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          customer_name: string
+          email: string
+          id?: string
+          items?: Json
+          order_id: string
+          payment_id?: string | null
+          phone: string
+          status?: string
+          total: number
+          user_id?: string | null
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          customer_name?: string
+          email?: string
+          id?: string
+          items?: Json
+          order_id?: string
+          payment_id?: string | null
+          phone?: string
+          status?: string
+          total?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string
+          colors: string[]
+          created_at: string
+          description: string
+          id: string
+          images: string[]
+          in_stock: boolean
+          is_fast_selling: boolean
+          is_new_arrival: boolean
+          name: string
+          original_price: number | null
+          price: number
+          rating: number
+          reviews: number
+          sizes: string[]
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          colors?: string[]
+          created_at?: string
+          description?: string
+          id?: string
+          images?: string[]
+          in_stock?: boolean
+          is_fast_selling?: boolean
+          is_new_arrival?: boolean
+          name: string
+          original_price?: number | null
+          price: number
+          rating?: number
+          reviews?: number
+          sizes?: string[]
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          colors?: string[]
+          created_at?: string
+          description?: string
+          id?: string
+          images?: string[]
+          in_stock?: boolean
+          is_fast_selling?: boolean
+          is_new_arrival?: boolean
+          name?: string
+          original_price?: number | null
+          price?: number
+          rating?: number
+          reviews?: number
+          sizes?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null

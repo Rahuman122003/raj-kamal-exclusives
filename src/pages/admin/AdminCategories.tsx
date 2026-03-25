@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Plus, Pencil, Trash2, Upload, Link as LinkIcon } from 'lucide-react';
-import { categories as initialCats } from '@/data/products';
+import { supabase } from '@/integrations/supabase/client';
+import { useCategories } from '@/hooks/useSupabaseData';
+import { useToast } from '@/hooks/use-toast';
 
 const AdminCategories = () => {
-  const [items, setItems] = useState(initialCats);
+  const { data: items, loading, refetch } = useCategories();
+  const { toast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const [name, setName] = useState('');
@@ -17,15 +20,25 @@ const AdminCategories = () => {
     if (cat) { setEditing(id); setName(cat.name); setImage(cat.image); setShowForm(true); }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!name.trim()) return;
     const finalImage = image || 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=400&fit=crop';
+    const slug = name.toLowerCase().replace(/\s+/g, '-');
     if (editing) {
-      setItems(prev => prev.map(c => c.id === editing ? { ...c, name, slug: name.toLowerCase().replace(/\s+/g, '-'), image: finalImage } : c));
+      await supabase.from('categories').update({ name, slug, image: finalImage } as any).eq('id', editing);
+      toast({ title: 'Category updated' });
     } else {
-      setItems(prev => [...prev, { id: Date.now().toString(), name, slug: name.toLowerCase().replace(/\s+/g, '-'), image: finalImage }]);
+      await supabase.from('categories').insert({ name, slug, image: finalImage } as any);
+      toast({ title: 'Category added' });
     }
     resetForm();
+    refetch();
+  };
+
+  const handleDelete = async (id: string) => {
+    await supabase.from('categories').delete().eq('id', id);
+    toast({ title: 'Category deleted' });
+    refetch();
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,21 +88,25 @@ const AdminCategories = () => {
         </div>
       )}
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {items.map(cat => (
-          <div key={cat.id} className="bg-card rounded-xl p-4 shadow-warm flex items-center gap-4">
-            <img src={cat.image} alt={cat.name} className="w-14 h-14 rounded-full object-cover" />
-            <div className="flex-1">
-              <p className="font-semibold text-foreground">{cat.name}</p>
-              <p className="text-xs text-muted-foreground">/{cat.slug}</p>
+      {loading ? (
+        <p className="text-center text-muted-foreground py-8">Loading...</p>
+      ) : (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {items.map(cat => (
+            <div key={cat.id} className="bg-card rounded-xl p-4 shadow-warm flex items-center gap-4">
+              <img src={cat.image} alt={cat.name} className="w-14 h-14 rounded-full object-cover" />
+              <div className="flex-1">
+                <p className="font-semibold text-foreground">{cat.name}</p>
+                <p className="text-xs text-muted-foreground">/{cat.slug}</p>
+              </div>
+              <div className="flex gap-1">
+                <button onClick={() => handleEdit(cat.id)} className="p-1.5 rounded hover:bg-muted text-foreground"><Pencil className="w-4 h-4" /></button>
+                <button onClick={() => handleDelete(cat.id)} className="p-1.5 rounded hover:bg-destructive/10 text-destructive"><Trash2 className="w-4 h-4" /></button>
+              </div>
             </div>
-            <div className="flex gap-1">
-              <button onClick={() => handleEdit(cat.id)} className="p-1.5 rounded hover:bg-muted text-foreground"><Pencil className="w-4 h-4" /></button>
-              <button onClick={() => setItems(prev => prev.filter(c => c.id !== cat.id))} className="p-1.5 rounded hover:bg-destructive/10 text-destructive"><Trash2 className="w-4 h-4" /></button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
