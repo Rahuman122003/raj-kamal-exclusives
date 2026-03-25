@@ -1,18 +1,41 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Truck, Shield, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { products, categories, coupons, banners } from '@/data/products';
+import { useProducts, useCategories, useCoupons, useBanners } from '@/hooks/useSupabaseData';
 import ProductCard from '@/components/ProductCard';
 
 const Index = () => {
-  const newArrivals = products.filter(p => p.isNewArrival).slice(0, 4);
-  const fastSelling = products.filter(p => p.isFastSelling).slice(0, 4);
+  const { data: products, loading: pLoading } = useProducts();
+  const { data: categories } = useCategories();
+  const { data: coupons } = useCoupons();
+  const { data: banners } = useBanners();
+
+  const newArrivals = products.filter(p => p.is_new_arrival).slice(0, 4);
+  const fastSelling = products.filter(p => p.is_fast_selling).slice(0, 4);
   const accessories = products.filter(p => p.category === 'accessories').slice(0, 4);
-  const activeCoupon = coupons.find(c => c.isActive);
+  const activeCoupon = coupons.find(c => c.is_active);
+
+  // Map DB product to Product shape for ProductCard
+  const mapProduct = (p: any) => ({
+    id: p.id,
+    name: p.name,
+    description: p.description,
+    price: Number(p.price),
+    originalPrice: p.original_price ? Number(p.original_price) : undefined,
+    category: p.category,
+    images: p.images || [],
+    colors: p.colors || [],
+    sizes: p.sizes || [],
+    inStock: p.in_stock,
+    isNewArrival: p.is_new_arrival,
+    isFastSelling: p.is_fast_selling,
+    rating: Number(p.rating),
+    reviews: p.reviews,
+    createdAt: p.created_at,
+  });
 
   return (
     <div>
-      {/* Coupon Banner */}
       {activeCoupon && (
         <div className="gradient-gold text-center py-2 px-4">
           <p className="text-sm font-semibold text-secondary-foreground">
@@ -21,7 +44,7 @@ const Index = () => {
         </div>
       )}
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="gradient-hero relative overflow-hidden">
         <div className="container mx-auto px-4 py-16 md:py-24">
           <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -29,12 +52,10 @@ const Index = () => {
               <p className="text-secondary font-semibold text-sm uppercase tracking-widest mb-3">Premium Textile Collection</p>
               <h2 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground leading-tight">
                 Style That<br />
-                <span className="text-gradient-gold" style={{ WebkitTextFillColor: 'transparent', backgroundImage: 'var(--gradient-gold)' }}>
-                  Defines You
-                </span>
+                <span className="text-gradient-gold" style={{ WebkitTextFillColor: 'transparent', backgroundImage: 'var(--gradient-gold)' }}>Defines You</span>
               </h2>
               <p className="mt-4 text-primary-foreground/80 max-w-md leading-relaxed">
-                Discover handcrafted textiles and ethnic wear that blend tradition with contemporary style. From silk sarees to designer kurtas.
+                Discover handcrafted textiles and ethnic wear that blend tradition with contemporary style.
               </p>
               <div className="flex gap-3 mt-8">
                 <Link to="/shop" className="inline-flex items-center gap-2 gradient-gold text-secondary-foreground px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-gold">
@@ -59,7 +80,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Strip */}
+      {/* Features */}
       <section className="border-b border-border py-6">
         <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
@@ -78,7 +99,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Offer Banners */}
+      {/* Banners */}
       {banners.length > 0 && (
         <section className="container mx-auto px-4 py-10">
           <div className="grid md:grid-cols-2 gap-4">
@@ -98,54 +119,54 @@ const Index = () => {
       )}
 
       {/* Categories */}
-      <section className="container mx-auto px-4 py-10">
-        <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground text-center mb-8">Shop by Category</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          {categories.map(cat => (
-            <Link key={cat.id} to={`/shop?category=${cat.slug}`} className="group text-center">
-              <div className="aspect-square rounded-full overflow-hidden mx-auto w-28 h-28 md:w-36 md:h-36 border-4 border-border group-hover:border-secondary transition-colors shadow-warm">
-                <img src={cat.image} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-              </div>
-              <p className="mt-3 font-semibold text-foreground group-hover:text-primary transition-colors">{cat.name}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {categories.length > 0 && (
+        <section className="container mx-auto px-4 py-10">
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground text-center mb-8">Shop by Category</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            {categories.map(cat => (
+              <Link key={cat.id} to={`/shop?category=${cat.slug}`} className="group text-center">
+                <div className="aspect-square rounded-full overflow-hidden mx-auto w-28 h-28 md:w-36 md:h-36 border-4 border-border group-hover:border-secondary transition-colors shadow-warm">
+                  <img src={cat.image} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                </div>
+                <p className="mt-3 font-semibold text-foreground group-hover:text-primary transition-colors">{cat.name}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* New Arrivals */}
-      <section className="container mx-auto px-4 py-10">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="font-display text-2xl font-bold text-foreground">New Arrivals</h2>
-          <Link to="/shop?filter=new" className="text-sm text-primary font-semibold hover:underline flex items-center gap-1">
-            View All <ArrowRight className="w-3 h-3" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{newArrivals.map(p => <ProductCard key={p.id} product={p} />)}</div>
-      </section>
+      {newArrivals.length > 0 && (
+        <section className="container mx-auto px-4 py-10">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-display text-2xl font-bold text-foreground">New Arrivals</h2>
+            <Link to="/shop?filter=new" className="text-sm text-primary font-semibold hover:underline flex items-center gap-1">View All <ArrowRight className="w-3 h-3" /></Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{newArrivals.map(p => <ProductCard key={p.id} product={mapProduct(p)} />)}</div>
+        </section>
+      )}
 
       {/* Fast Selling */}
-      <section className="bg-muted py-10">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="font-display text-2xl font-bold text-foreground">🔥 Fast Selling</h2>
-            <Link to="/shop?filter=fast" className="text-sm text-primary font-semibold hover:underline flex items-center gap-1">
-              View All <ArrowRight className="w-3 h-3" />
-            </Link>
+      {fastSelling.length > 0 && (
+        <section className="bg-muted py-10">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-display text-2xl font-bold text-foreground">🔥 Fast Selling</h2>
+              <Link to="/shop?filter=fast" className="text-sm text-primary font-semibold hover:underline flex items-center gap-1">View All <ArrowRight className="w-3 h-3" /></Link>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{fastSelling.map(p => <ProductCard key={p.id} product={mapProduct(p)} />)}</div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{fastSelling.map(p => <ProductCard key={p.id} product={p} />)}</div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Accessories */}
       {accessories.length > 0 && (
         <section className="container mx-auto px-4 py-10">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-display text-2xl font-bold text-foreground">Accessories</h2>
-            <Link to="/shop?category=accessories" className="text-sm text-primary font-semibold hover:underline flex items-center gap-1">
-              View All <ArrowRight className="w-3 h-3" />
-            </Link>
+            <Link to="/shop?category=accessories" className="text-sm text-primary font-semibold hover:underline flex items-center gap-1">View All <ArrowRight className="w-3 h-3" /></Link>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{accessories.map(p => <ProductCard key={p.id} product={p} />)}</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">{accessories.map(p => <ProductCard key={p.id} product={mapProduct(p)} />)}</div>
         </section>
       )}
     </div>

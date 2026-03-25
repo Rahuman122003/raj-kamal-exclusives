@@ -1,34 +1,8 @@
-import { useState, useEffect } from 'react';
 import { Users, RefreshCw } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-
-interface UserProfile {
-  id: string;
-  user_id: string;
-  display_name: string | null;
-  phone: string | null;
-  created_at: string;
-  email?: string;
-}
+import { useProfiles } from '@/hooks/useSupabaseData';
 
 const AdminUsers = () => {
-  const [users, setUsers] = useState<UserProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchUsers = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      setUsers(data as UserProfile[]);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => { fetchUsers(); }, []);
+  const { data: users, loading, refetch } = useProfiles();
 
   return (
     <div className="space-y-4">
@@ -38,7 +12,7 @@ const AdminUsers = () => {
           <h1 className="font-display text-2xl font-bold text-foreground">Registered Users</h1>
           <span className="px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-semibold">{users.length}</span>
         </div>
-        <button onClick={fetchUsers} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-input text-foreground text-sm hover:bg-muted transition-colors">
+        <button onClick={refetch} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-input text-foreground text-sm hover:bg-muted transition-colors">
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Refresh
         </button>
       </div>
@@ -56,7 +30,7 @@ const AdminUsers = () => {
           <table className="w-full text-sm">
             <thead><tr className="border-b border-border text-left text-muted-foreground"><th className="px-4 py-3">#</th><th className="px-4 py-3">Name</th><th className="px-4 py-3">Phone</th><th className="px-4 py-3">Joined</th></tr></thead>
             <tbody>
-              {users.map((u, i) => (
+              {users.map((u: any, i: number) => (
                 <tr key={u.id} className="border-b border-border last:border-0">
                   <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
                   <td className="px-4 py-3 font-semibold text-foreground">{u.display_name || 'No name'}</td>

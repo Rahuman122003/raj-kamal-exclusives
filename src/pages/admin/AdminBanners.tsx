@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Plus, Pencil, Trash2, Upload, Link as LinkIcon } from 'lucide-react';
-import { banners as initialBanners, Banner } from '@/data/products';
+import { supabase } from '@/integrations/supabase/client';
+import { useBanners } from '@/hooks/useSupabaseData';
+import { useToast } from '@/hooks/use-toast';
 
 const linkOptions = [
   { label: 'Shop Page', value: '/shop' },
@@ -14,32 +16,42 @@ const linkOptions = [
 ];
 
 const AdminBanners = () => {
-  const [items, setItems] = useState<Banner[]>(initialBanners);
+  const { data: items, loading, refetch } = useBanners();
+  const { toast } = useToast();
   const [showForm, setShowForm] = useState(false);
-  const [editing, setEditing] = useState<Banner | null>(null);
+  const [editing, setEditing] = useState<any>(null);
   const [form, setForm] = useState({ title: '', subtitle: '', link: '/shop', customLink: '', image: '' });
   const [imageInput, setImageInput] = useState('');
 
   const resetForm = () => { setForm({ title: '', subtitle: '', link: '/shop', customLink: '', image: '' }); setEditing(null); setShowForm(false); setImageInput(''); };
 
-  const handleEdit = (b: Banner) => {
+  const handleEdit = (b: any) => {
     setEditing(b);
     const isPreset = linkOptions.some(o => o.value === b.link && o.value !== 'custom');
     setForm({ title: b.title, subtitle: b.subtitle, link: isPreset ? b.link : 'custom', customLink: isPreset ? '' : b.link, image: b.image });
     setShowForm(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.title) return;
     const finalLink = form.link === 'custom' ? form.customLink : form.link;
     const finalImage = form.image || 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&h=400&fit=crop';
-    const banner: Banner = { id: editing?.id || Date.now().toString(), title: form.title, subtitle: form.subtitle, image: finalImage, link: finalLink };
+    const payload = { title: form.title, subtitle: form.subtitle, image: finalImage, link: finalLink };
     if (editing) {
-      setItems(prev => prev.map(b => b.id === editing.id ? banner : b));
+      await supabase.from('banners').update(payload as any).eq('id', editing.id);
+      toast({ title: 'Banner updated' });
     } else {
-      setItems(prev => [...prev, banner]);
+      await supabase.from('banners').insert(payload as any);
+      toast({ title: 'Banner added' });
     }
     resetForm();
+    refetch();
+  };
+
+  const handleDelete = async (id: string) => {
+    await supabase.from('banners').delete().eq('id', id);
+    toast({ title: 'Banner deleted' });
+    refetch();
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,22 +116,26 @@ const AdminBanners = () => {
         </div>
       )}
 
-      <div className="space-y-4">
-        {items.map(b => (
-          <div key={b.id} className="bg-card rounded-xl overflow-hidden shadow-warm">
-            <div className="relative h-32">
-              <img src={b.image} alt={b.title} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 to-transparent flex items-center p-6">
-                <div><h3 className="font-display font-bold text-background">{b.title}</h3><p className="text-sm text-background/80">{b.subtitle}</p></div>
-              </div>
-              <div className="absolute top-2 right-2 flex gap-1">
-                <button onClick={() => handleEdit(b)} className="p-1.5 rounded bg-background/80 text-foreground hover:bg-background"><Pencil className="w-4 h-4" /></button>
-                <button onClick={() => setItems(prev => prev.filter(x => x.id !== b.id))} className="p-1.5 rounded bg-destructive/80 text-destructive-foreground hover:bg-destructive"><Trash2 className="w-4 h-4" /></button>
+      {loading ? (
+        <p className="text-center text-muted-foreground py-8">Loading...</p>
+      ) : (
+        <div className="space-y-4">
+          {items.map(b => (
+            <div key={b.id} className="bg-card rounded-xl overflow-hidden shadow-warm">
+              <div className="relative h-32">
+                <img src={b.image} alt={b.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 to-transparent flex items-center p-6">
+                  <div><h3 className="font-display font-bold text-background">{b.title}</h3><p className="text-sm text-background/80">{b.subtitle}</p></div>
+                </div>
+                <div className="absolute top-2 right-2 flex gap-1">
+                  <button onClick={() => handleEdit(b)} className="p-1.5 rounded bg-background/80 text-foreground hover:bg-background"><Pencil className="w-4 h-4" /></button>
+                  <button onClick={() => handleDelete(b.id)} className="p-1.5 rounded bg-destructive/80 text-destructive-foreground hover:bg-destructive"><Trash2 className="w-4 h-4" /></button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
