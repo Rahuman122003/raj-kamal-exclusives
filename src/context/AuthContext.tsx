@@ -23,6 +23,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Handle redirect after OAuth login
+      if (_event === 'SIGNED_IN' && session) {
+        const redirectPath = sessionStorage.getItem('auth_redirect');
+        if (redirectPath) {
+          sessionStorage.removeItem('auth_redirect');
+          // Use setTimeout to let React finish rendering
+          setTimeout(() => {
+            window.location.href = redirectPath;
+          }, 100);
+        }
+      }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {

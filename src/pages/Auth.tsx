@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { lovable } from '@/integrations/lovable/index';
 import { useToast } from '@/hooks/use-toast';
+import { motion } from 'framer-motion';
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -10,9 +11,19 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+
+  // Get the page user came from
+  const from = (location.state as any)?.from || '/';
+
+  // If already logged in, redirect
+  if (user) {
+    navigate(from, { replace: true });
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +41,7 @@ const Auth = () => {
         toast({ title: 'Sign In Failed', description: error.message, variant: 'destructive' });
       } else {
         toast({ title: 'Welcome back!' });
-        navigate('/');
+        navigate(from, { replace: true });
       }
     }
     setLoading(false);
@@ -38,6 +49,8 @@ const Auth = () => {
 
   const handleGoogleLogin = async () => {
     setLoading(true);
+    // Store the return path for after OAuth redirect
+    sessionStorage.setItem('auth_redirect', from);
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
     });
@@ -49,11 +62,21 @@ const Auth = () => {
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-card rounded-2xl p-8 shadow-warm">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md bg-card rounded-2xl p-8 shadow-warm"
+      >
         <div className="text-center mb-6">
-          <div className="w-14 h-14 rounded-full gradient-hero mx-auto flex items-center justify-center mb-3">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
+            className="w-14 h-14 rounded-full gradient-hero mx-auto flex items-center justify-center mb-3"
+          >
             <span className="text-primary-foreground font-display font-bold text-xl">R</span>
-          </div>
+          </motion.div>
           <h2 className="font-display text-2xl font-bold text-foreground">{isSignUp ? 'Create Account' : 'Welcome Back'}</h2>
           <p className="text-sm text-muted-foreground mt-1">Raj Kamal Exclusives</p>
         </div>
@@ -80,10 +103,10 @@ const Auth = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {isSignUp && (
-            <div>
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} transition={{ duration: 0.3 }}>
               <label className="block text-sm font-medium text-foreground mb-1">Full Name</label>
               <input type="text" value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" placeholder="Your name" />
-            </div>
+            </motion.div>
           )}
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Email</label>
@@ -93,9 +116,15 @@ const Auth = () => {
             <label className="block text-sm font-medium text-foreground mb-1">Password</label>
             <input type="password" required value={password} onChange={e => setPassword(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" placeholder="••••••••" minLength={6} />
           </div>
-          <button type="submit" disabled={loading} className="w-full gradient-gold text-secondary-foreground py-3 rounded-lg font-semibold shadow-gold hover:opacity-90 transition-opacity disabled:opacity-50">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            type="submit"
+            disabled={loading}
+            className="w-full gradient-gold text-secondary-foreground py-3 rounded-lg font-semibold shadow-gold hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
             {loading ? 'Processing...' : isSignUp ? 'Sign Up' : 'Sign In'}
-          </button>
+          </motion.button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground mt-4">
@@ -104,7 +133,7 @@ const Auth = () => {
             {isSignUp ? 'Sign In' : 'Sign Up'}
           </button>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 };
