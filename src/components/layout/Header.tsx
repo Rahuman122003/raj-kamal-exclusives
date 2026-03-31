@@ -4,6 +4,7 @@ import { ShoppingCart, Menu, X, ChevronDown, User, LogOut } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import logo from '@/assets/logo.png';
 
 const categoryLinks = [
   { name: 'Men', to: '/shop?category=men' },
@@ -35,17 +36,8 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-warm">
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <motion.div
-            whileHover={{ rotate: 5 }}
-            className="w-10 h-10 rounded-full gradient-hero flex items-center justify-center ring-2 ring-secondary/30"
-          >
-            <span className="text-primary-foreground font-display font-bold text-lg">R</span>
-          </motion.div>
-          <div className="hidden sm:block">
-            <h1 className="font-display text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">Raj Kamal</h1>
-            <p className="text-xs text-muted-foreground -mt-0.5">Exclusives</p>
-          </div>
+        <Link to="/" className="flex items-center gap-1 group">
+          <img src={logo} alt="Raj Kamal Exclusives" className="h-12 w-auto object-contain" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">

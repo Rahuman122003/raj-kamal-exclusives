@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Heart } from 'lucide-react';
+import logo from '@/assets/logo.png';
 
 const Footer = () => (
   <footer className="gradient-hero text-primary-foreground">
@@ -7,13 +8,7 @@ const Footer = () => (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 rounded-full gradient-gold flex items-center justify-center">
-              <span className="text-secondary-foreground font-display font-bold text-lg">R</span>
-            </div>
-            <div>
-              <h3 className="font-display text-lg font-bold">Raj Kamal</h3>
-              <p className="text-xs opacity-70 -mt-0.5">Exclusives</p>
-            </div>
+            <img src={logo} alt="Raj Kamal Exclusives" className="h-12 w-auto object-contain brightness-150" />
           </div>
           <p className="text-sm opacity-70 leading-relaxed">Premium textiles and ethnic wear for every occasion. Quality craftsmanship since generations.</p>
         </div>

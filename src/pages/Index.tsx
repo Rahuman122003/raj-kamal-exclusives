@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Truck, Shield, Sparkles, Star } from 'lucide-react';
+import { ArrowRight, Truck, Shield, Sparkles, Star, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useProducts, useCategories, useCoupons, useBanners } from '@/hooks/useSupabaseData';
 import ProductCard from '@/components/ProductCard';
+import logo from '@/assets/logo.png';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -43,26 +44,45 @@ const Index = () => {
         </motion.div>
       )}
 
-      {/* Hero */}
-      <section className="gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 right-10 w-72 h-72 rounded-full bg-secondary blur-3xl" />
-          <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-accent blur-3xl" />
-        </div>
-        <div className="container mx-auto px-4 py-20 md:py-28 relative">
+      {/* Hero with Video Background */}
+      <section className="relative overflow-hidden min-h-[85vh] flex items-center">
+        {/* Video Background */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          poster="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1200&h=800&fit=crop"
+        >
+          <source src="https://cdn.pixabay.com/video/2020/05/25/40130-424930032_large.mp4" type="video/mp4" />
+        </video>
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[hsl(348,85%,18%)] via-[hsl(348,85%,18%,0.85)] to-transparent" />
+        <div className="absolute inset-0 bg-black/30" />
+
+        <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="grid md:grid-cols-2 gap-10 items-center">
             <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }}>
+              <motion.img
+                src={logo}
+                alt="Raj Kamal Exclusives"
+                className="h-20 w-auto mb-6 drop-shadow-2xl"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+              />
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.4 }}
                 className="text-secondary font-semibold text-sm uppercase tracking-[0.2em] mb-4"
               >
                 ✦ Premium Textile Collection
               </motion.p>
               <h2 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground leading-tight">
                 Style That<br />
-                <span className="text-gradient-gold" style={{ WebkitTextFillColor: 'transparent', backgroundImage: 'var(--gradient-gold)' }}>Defines You</span>
+                <span className="text-gradient-gold">Defines You</span>
               </h2>
               <p className="mt-5 text-primary-foreground/80 max-w-md leading-relaxed text-lg">
                 Discover handcrafted textiles and ethnic wear that blend tradition with contemporary style.
@@ -73,7 +93,7 @@ const Index = () => {
                     Shop Now <ArrowRight className="w-4 h-4" />
                   </Link>
                 </motion.div>
-                <Link to="/about" className="inline-flex items-center gap-2 border border-primary-foreground/30 text-primary-foreground px-7 py-3.5 rounded-xl font-semibold hover:bg-primary-foreground/10 transition-colors text-base">
+                <Link to="/about" className="inline-flex items-center gap-2 border border-primary-foreground/30 text-primary-foreground px-7 py-3.5 rounded-xl font-semibold hover:bg-primary-foreground/10 transition-colors text-base backdrop-blur-sm">
                   Our Story
                 </Link>
               </div>
@@ -81,24 +101,16 @@ const Index = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative hidden md:block"
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative hidden md:flex items-center justify-center"
             >
-              <div className="rounded-2xl overflow-hidden shadow-2xl ring-4 ring-secondary/20">
-                <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&h=700&fit=crop" alt="Textile Collection" className="w-full h-[520px] object-cover" />
-              </div>
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
-                className="absolute -bottom-4 -left-4 bg-card p-5 rounded-xl shadow-warm border border-border"
-              >
+              <div className="absolute -bottom-6 -left-6 bg-card/90 backdrop-blur-md p-5 rounded-xl shadow-warm border border-border z-10">
                 <div className="flex items-center gap-2 mb-1">
                   {[1,2,3,4,5].map(i => <Star key={i} className="w-3.5 h-3.5 fill-secondary text-secondary" />)}
                 </div>
                 <p className="font-display font-bold text-2xl text-foreground">10,000+</p>
                 <p className="text-xs text-muted-foreground">Happy Customers</p>
-              </motion.div>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -148,7 +160,7 @@ const Index = () => {
               >
                 <Link to={banner.link} className="relative rounded-2xl overflow-hidden group aspect-[3/1] block">
                   <img src={banner.image} alt={banner.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-chocolate/80 to-transparent flex items-center p-8">
+                  <div className="absolute inset-0 bg-gradient-to-r from-[hsl(348,85%,18%,0.8)] to-transparent flex items-center p-8">
                     <div>
                       <h3 className="font-display text-xl md:text-2xl font-bold text-primary-foreground">{banner.title}</h3>
                       <p className="text-sm text-primary-foreground/80 mt-1">{banner.subtitle}</p>
