@@ -116,43 +116,7 @@ const Index = () => {
               </motion.div>
             </motion.div>
 
-            {/* Shop Building Image */}
-            <motion.div
-              initial={{ opacity: 0, x: 60, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ duration: 1, delay: 0.4, ease: 'easeOut' }}
-              className="relative hidden md:flex items-center justify-center"
-            >
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-2 ring-secondary/20">
-                <img
-                  src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=550&h=650&fit=crop"
-                  alt="Our Shop"
-                  className="w-full h-[480px] object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(348,85%,18%,0.6)] via-transparent to-transparent" />
-                <motion.div
-                  className="absolute bottom-4 left-4 right-4 bg-card/90 backdrop-blur-md p-4 rounded-xl border border-border"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2, duration: 0.5 }}
-                >
-                  <p className="font-display font-bold text-foreground text-sm">📍 Visit Our Store</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Premium collection available in-store & online</p>
-                </motion.div>
-              </div>
-              <motion.div
-                className="absolute -bottom-4 -left-4 bg-card/95 backdrop-blur-md p-4 rounded-xl shadow-warm border border-border z-10"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.4, type: 'spring', stiffness: 200 }}
-              >
-                <div className="flex items-center gap-1.5 mb-1">
-                  {[1,2,3,4,5].map(i => <Star key={i} className="w-3.5 h-3.5 fill-secondary text-secondary" />)}
-                </div>
-                <p className="font-display font-bold text-xl text-foreground">10,000+</p>
-                <p className="text-xs text-muted-foreground">Happy Customers</p>
-              </motion.div>
-            </motion.div>
+            {/* Right side - empty, full-width hero text */}
           </div>
         </div>
       </section>
