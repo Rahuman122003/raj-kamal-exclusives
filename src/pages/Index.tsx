@@ -122,6 +122,59 @@ const Index = () => {
         </div>
       </section>
 
+
+      {/* Tradition Section with Shop Building */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <img
+                src={shopBuilding}
+                alt="Raj Kamal Exclusives Shop"
+                className="rounded-2xl shadow-2xl ring-2 ring-secondary/20 w-full object-cover"
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <span className="text-secondary font-semibold text-sm uppercase tracking-[0.15em]">✦ Our Legacy</span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-2 mb-5">
+                A Tradition of <span className="text-gradient-gold">Excellence</span>
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                For over three decades, Raj Kamal Exclusives has been the most trusted name in premium textiles. What started as a humble family shop in the heart of Mumbai's textile district has blossomed into a beloved destination for discerning buyers across India.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Every fabric we curate is handpicked — from the lustrous Banarasi silks to the finest Gujarati cottons. Our artisans preserve age-old weaving traditions while our designers infuse modern sensibilities, creating pieces that are timeless yet contemporary.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                At Raj Kamal Exclusives, we don't just sell textiles — we celebrate the art of Indian craftsmanship and the stories woven into every thread.
+              </p>
+              <div className="flex gap-8">
+                {[
+                  { num: '30+', label: 'Years of Trust' },
+                  { num: '10K+', label: 'Happy Customers' },
+                  { num: '5000+', label: 'Products' },
+                ].map(s => (
+                  <div key={s.label} className="text-center">
+                    <p className="font-display text-2xl font-bold text-primary">{s.num}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Features */}
       <section className="border-b border-border py-8 bg-card">
         <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-6">
