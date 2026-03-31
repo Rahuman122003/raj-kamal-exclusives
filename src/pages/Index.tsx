@@ -67,50 +67,91 @@ const Index = () => {
               <motion.img
                 src={logo}
                 alt="Raj Kamal Exclusives"
-                className="h-20 w-auto mb-6 drop-shadow-2xl"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
+                className="h-28 md:h-36 w-auto mb-6 drop-shadow-[0_0_30px_rgba(255,204,0,0.4)]"
+                initial={{ opacity: 0, scale: 0.8, y: -30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.8, type: 'spring', stiffness: 120 }}
               />
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.5 }}
                 className="text-secondary font-semibold text-sm uppercase tracking-[0.2em] mb-4"
               >
                 ✦ Premium Textile Collection
               </motion.p>
-              <h2 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground leading-tight">
+              <motion.h2
+                className="font-display text-4xl md:text-6xl font-bold text-primary-foreground leading-tight"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+              >
                 Style That<br />
                 <span className="text-gradient-gold">Defines You</span>
-              </h2>
-              <p className="mt-5 text-primary-foreground/80 max-w-md leading-relaxed text-lg">
+              </motion.h2>
+              <motion.p
+                className="mt-5 text-primary-foreground/80 max-w-md leading-relaxed text-lg"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+              >
                 Discover handcrafted textiles and ethnic wear that blend tradition with contemporary style.
-              </p>
-              <div className="flex gap-3 mt-8">
+              </motion.p>
+              <motion.div
+                className="flex gap-3 mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.5 }}
+              >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link to="/shop" className="inline-flex items-center gap-2 gradient-gold text-secondary-foreground px-7 py-3.5 rounded-xl font-semibold hover:opacity-90 transition-opacity shadow-gold text-base">
                     Shop Now <ArrowRight className="w-4 h-4" />
                   </Link>
                 </motion.div>
-                <Link to="/about" className="inline-flex items-center gap-2 border border-primary-foreground/30 text-primary-foreground px-7 py-3.5 rounded-xl font-semibold hover:bg-primary-foreground/10 transition-colors text-base backdrop-blur-sm">
-                  Our Story
-                </Link>
-              </div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link to="/about" className="inline-flex items-center gap-2 border border-primary-foreground/30 text-primary-foreground px-7 py-3.5 rounded-xl font-semibold hover:bg-primary-foreground/10 transition-colors text-base backdrop-blur-sm">
+                    Our Story
+                  </Link>
+                </motion.div>
+              </motion.div>
             </motion.div>
+
+            {/* Shop Building Image */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              initial={{ opacity: 0, x: 60, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ duration: 1, delay: 0.4, ease: 'easeOut' }}
               className="relative hidden md:flex items-center justify-center"
             >
-              <div className="absolute -bottom-6 -left-6 bg-card/90 backdrop-blur-md p-5 rounded-xl shadow-warm border border-border z-10">
-                <div className="flex items-center gap-2 mb-1">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-2 ring-secondary/20">
+                <img
+                  src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=550&h=650&fit=crop"
+                  alt="Our Shop"
+                  className="w-full h-[480px] object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(348,85%,18%,0.6)] via-transparent to-transparent" />
+                <motion.div
+                  className="absolute bottom-4 left-4 right-4 bg-card/90 backdrop-blur-md p-4 rounded-xl border border-border"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2, duration: 0.5 }}
+                >
+                  <p className="font-display font-bold text-foreground text-sm">📍 Visit Our Store</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Premium collection available in-store & online</p>
+                </motion.div>
+              </div>
+              <motion.div
+                className="absolute -bottom-4 -left-4 bg-card/95 backdrop-blur-md p-4 rounded-xl shadow-warm border border-border z-10"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.4, type: 'spring', stiffness: 200 }}
+              >
+                <div className="flex items-center gap-1.5 mb-1">
                   {[1,2,3,4,5].map(i => <Star key={i} className="w-3.5 h-3.5 fill-secondary text-secondary" />)}
                 </div>
-                <p className="font-display font-bold text-2xl text-foreground">10,000+</p>
+                <p className="font-display font-bold text-xl text-foreground">10,000+</p>
                 <p className="text-xs text-muted-foreground">Happy Customers</p>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
