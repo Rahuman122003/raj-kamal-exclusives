@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Truck, Shield, Sparkles, Star, Play } from 'lucide-react';
+import { ArrowRight, Truck, Shield, Sparkles, Star } from 'lucide-react';
+import shopBuilding from '@/assets/shop-building.png';
 import { motion } from 'framer-motion';
 import { useProducts, useCategories, useCoupons, useBanners } from '@/hooks/useSupabaseData';
 import ProductCard from '@/components/ProductCard';
@@ -116,42 +117,59 @@ const Index = () => {
               </motion.div>
             </motion.div>
 
-            {/* Shop Building Image */}
+            {/* Right side - empty, full-width hero text */}
+          </div>
+        </div>
+      </section>
+
+
+      {/* Tradition Section with Shop Building */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
-              initial={{ opacity: 0, x: 60, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              transition={{ duration: 1, delay: 0.4, ease: 'easeOut' }}
-              className="relative hidden md:flex items-center justify-center"
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
             >
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-2 ring-secondary/20">
-                <img
-                  src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=550&h=650&fit=crop"
-                  alt="Our Shop"
-                  className="w-full h-[480px] object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(348,85%,18%,0.6)] via-transparent to-transparent" />
-                <motion.div
-                  className="absolute bottom-4 left-4 right-4 bg-card/90 backdrop-blur-md p-4 rounded-xl border border-border"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2, duration: 0.5 }}
-                >
-                  <p className="font-display font-bold text-foreground text-sm">📍 Visit Our Store</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Premium collection available in-store & online</p>
-                </motion.div>
+              <img
+                src={shopBuilding}
+                alt="Raj Kamal Exclusives Shop"
+                className="rounded-2xl shadow-2xl ring-2 ring-secondary/20 w-full object-cover"
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <span className="text-secondary font-semibold text-sm uppercase tracking-[0.15em]">✦ Our Legacy</span>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-2 mb-5">
+                A Tradition of <span className="text-gradient-gold">Excellence</span>
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                For over three decades, Raj Kamal Exclusives has been the most trusted name in premium textiles. What started as a humble family shop in the heart of Mumbai's textile district has blossomed into a beloved destination for discerning buyers across India.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Every fabric we curate is handpicked — from the lustrous Banarasi silks to the finest Gujarati cottons. Our artisans preserve age-old weaving traditions while our designers infuse modern sensibilities, creating pieces that are timeless yet contemporary.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                At Raj Kamal Exclusives, we don't just sell textiles — we celebrate the art of Indian craftsmanship and the stories woven into every thread.
+              </p>
+              <div className="flex gap-8">
+                {[
+                  { num: '30+', label: 'Years of Trust' },
+                  { num: '10K+', label: 'Happy Customers' },
+                  { num: '5000+', label: 'Products' },
+                ].map(s => (
+                  <div key={s.label} className="text-center">
+                    <p className="font-display text-2xl font-bold text-primary">{s.num}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{s.label}</p>
+                  </div>
+                ))}
               </div>
-              <motion.div
-                className="absolute -bottom-4 -left-4 bg-card/95 backdrop-blur-md p-4 rounded-xl shadow-warm border border-border z-10"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.4, type: 'spring', stiffness: 200 }}
-              >
-                <div className="flex items-center gap-1.5 mb-1">
-                  {[1,2,3,4,5].map(i => <Star key={i} className="w-3.5 h-3.5 fill-secondary text-secondary" />)}
-                </div>
-                <p className="font-display font-bold text-xl text-foreground">10,000+</p>
-                <p className="text-xs text-muted-foreground">Happy Customers</p>
-              </motion.div>
             </motion.div>
           </div>
         </div>

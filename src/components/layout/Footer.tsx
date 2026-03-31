@@ -8,7 +8,7 @@ const Footer = () => (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <img src={logo} alt="Raj Kamal Exclusives" className="h-12 w-auto object-contain brightness-150" />
+            <img src={logo} alt="Raj Kamal Exclusives" className="h-16 w-auto object-contain brightness-150" />
           </div>
           <p className="text-sm opacity-70 leading-relaxed">Premium textiles and ethnic wear for every occasion. Quality craftsmanship since generations.</p>
         </div>
