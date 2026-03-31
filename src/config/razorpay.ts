@@ -11,7 +11,7 @@
 // Live Key starts with: rzp_live_
 // ============================================
 
-export const RAZORPAY_KEY_ID = 'rzp_test_YOUR_KEY_HERE';
+export const RAZORPAY_KEY_ID = 'rzp_test_SXm5EU9OBDloLk';
 
 // Shop details shown in Razorpay checkout popup
 export const RAZORPAY_CONFIG = {
