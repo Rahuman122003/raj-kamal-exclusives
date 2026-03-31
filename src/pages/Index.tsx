@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Truck, Shield, Sparkles, Star, Play } from 'lucide-react';
+import { ArrowRight, Truck, Shield, Sparkles, Star } from 'lucide-react';
+import shopBuilding from '@/assets/shop-building.png';
 import { motion } from 'framer-motion';
 import { useProducts, useCategories, useCoupons, useBanners } from '@/hooks/useSupabaseData';
 import ProductCard from '@/components/ProductCard';
