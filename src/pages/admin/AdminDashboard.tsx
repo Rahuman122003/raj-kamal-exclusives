@@ -21,7 +21,9 @@ type RangeMode = 'last7' | 'last30' | 'monthly' | 'custom';
 const PIE_COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', '#D4A853', '#8B5E3C', '#6B2F3A', '#E8C547'];
 
 const AdminDashboard = () => {
-  const { orders, products, profiles } = useSupabaseData();
+  const { data: orders } = useOrders();
+  const { data: products } = useProducts();
+  const { data: profiles } = useProfiles();
   const [rangeMode, setRangeMode] = useState<RangeMode>('last7');
   const [dateFrom, setDateFrom] = useState<Date | undefined>(subDays(new Date(), 7));
   const [dateTo, setDateTo] = useState<Date | undefined>(new Date());
