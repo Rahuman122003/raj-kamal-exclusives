@@ -114,7 +114,7 @@ const Checkout = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (!RAZORPAY_KEY_ID || RAZORPAY_KEY_ID === 'rzp_test_YOUR_KEY_HERE') {
+    if (!RAZORPAY_KEY_ID || RAZORPAY_KEY_ID.includes('YOUR_KEY_HERE')) {
       toast({ title: 'Demo Mode', description: 'Razorpay key not configured. Simulating payment...' });
       setTimeout(async () => {
         const orderId = 'ORD-' + Date.now().toString(36).toUpperCase();
@@ -282,7 +282,7 @@ const Checkout = () => {
               {loading ? 'Processing...' : `Pay ₹${total.toLocaleString()}`}
             </motion.button>
             <p className="text-xs text-muted-foreground text-center mt-3">
-              {RAZORPAY_KEY_ID === 'rzp_test_YOUR_KEY_HERE' ? '🔧 Demo Mode — Configure Razorpay key in src/config/razorpay.ts' : '🔒 Secured by Razorpay'}
+              {RAZORPAY_KEY_ID.includes('YOUR_KEY_HERE') ? '🔧 Demo Mode — Configure Razorpay key in src/config/razorpay.ts' : '🔒 Secured by Razorpay'}
             </p>
           </motion.div>
         </div>
