@@ -37,7 +37,9 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-warm">
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         <Link to="/" className="flex items-center gap-1 group">
-          <img src={logo} alt="Raj Kamal Exclusives" className="h-16 md:h-20 w-auto object-contain" />
+          <div className="bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-lg px-2 py-1">
+            <img src={logo} alt="Raj Kamal Exclusives" className="h-14 md:h-16 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,204,0,0.5)]" />
+          </div>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
