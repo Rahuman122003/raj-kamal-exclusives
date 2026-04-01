@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Package, ShoppingCart, Users, TrendingUp, IndianRupee, CalendarDays } from 'lucide-react';
-import { useSupabaseData } from '@/hooks/useSupabaseData';
+import { useOrders, useProducts, useProfiles } from '@/hooks/useSupabaseData';
 import { format, subDays, subMonths, startOfDay, endOfDay, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, isWithinInterval, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
